@@ -1,0 +1,36 @@
+version: '3.1'
+services:
+  drupal:
+    image: drupal
+    restart: "always"
+    ports:
+      - "8080:80"
+    environment:
+      MYSQL_DATABASE: drupal
+      MYSQL_USER: drupal
+      MYSQL_PASSWORD: drupal
+      MYSQL_ROOT_PASSWORD: root
+    depends_on:
+      - db
+    volumes:
+     - ./volumes/drupal/modules:/var/www/html/modules:Z
+     - ./volumes/drupal/themes:/var/www/html/themes:Z
+     - ./volumes/drupal/profiles:/var/www/html/profiles:Z
+     - ./volumes/drupal/sites:/var/www/html/sites:Z
+  db:
+    image: mariadb
+    restart: "always"
+    ports:
+      - "3306:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_USER: drupal
+      MARIADB_PASSWORD: drupal
+      MARIADB_DATABASE: drupal
+    volumes:
+      - ./volumes/drupal_db:/var/lib/mysql
+volumes:
+  db_data:
+    driver: local
+  drupal_data:
+    driver: local
